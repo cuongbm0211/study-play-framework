@@ -117,4 +117,35 @@ public class BasicTest extends UnitTest {
         assertEquals(0, Comment.count());
     }
 
+    @Test
+    public void fullTest() {
+        Fixtures.loadModels("data.yml");
+
+        // Count things
+        assertEquals(2, User.count());
+        assertEquals(3, Post.count());
+        assertEquals(3, Comment.count());
+
+        // Find all of Bob's posts
+        List<Post> bobPosts = Post.find("author.email", "bob@gmail.com").fetch();
+        assertEquals(2, bobPosts.size());
+
+        // Find all comments related to Bob's posts
+        List<Comment> bobComments = Comment.find("post.author.email", "bob@gmail.com").fetch();
+        assertEquals(3, bobComments.size());
+
+        // Find the most recent post
+        Post frontPost = Post.find("order by postedAt desc").first();
+        assertNotNull(frontPost);
+        assertEquals("About the model layer", frontPost.title);
+
+        // Check that this post has two comments
+        assertEquals(2, frontPost.comments.size());
+
+        // Post a new comment
+        frontPost.addComment("Jim", "Hello guys");
+        assertEquals(3, frontPost.comments.size());
+        assertEquals(4, Comment.count());
+    }
+
 }
