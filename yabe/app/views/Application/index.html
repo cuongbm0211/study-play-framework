@@ -2,7 +2,11 @@
 #{set title:'Yabe blog' /}
 
 #{if frontPost}
-
+    <div class="post">
+        <h2 class="post-title">
+            <a href="#">${frontPost.title}</a>
+        </h2>
+    </div>
 #{/if}
 
 #{else}
